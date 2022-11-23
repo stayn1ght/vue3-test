@@ -23,7 +23,7 @@
 	},
 	"vue新建页面": {
 		"scope": "vue",
-		"prefix": "page",
+		"prefix": "vue",
 		"body": [
 			"<template>",
 			"    <div>",

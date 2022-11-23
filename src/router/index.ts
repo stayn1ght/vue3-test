@@ -5,7 +5,7 @@ import 'nprogress/nprogress.css';
 
 routes.push({
   path: '/',
-  redirect: '/login',
+  redirect: '/network',
 });
 //导入生成的路由数据
 const router = createRouter({
