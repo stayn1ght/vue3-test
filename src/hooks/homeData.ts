@@ -1,6 +1,6 @@
 import {reactive} from "vue";
-import {getHomeStates} from "/@/api";
-import {InfoData} from "/@/api/types";
+import {getHomeStates} from "@api/home";
+import {InfoData} from "@api/home/types";
 
 const infoData: InfoData = reactive({})
 

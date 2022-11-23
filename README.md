@@ -1,8 +1,8 @@
-<p align="center" style="background:#e6e6e6;padding:20px">
+<p align="center">
     <img  src="https://cdn.jsdelivr.net/gh/MaleWeb/picture/images/techblog/fast-vue3.svg" width="340" />
 </p>
 
-<p align="center">
+<p align="center">  
     <img src="https://img.shields.io/badge/-Vue3-34495e?logo=vue.j" />
     <img src="https://img.shields.io/badge/-Vite2.7-646cff?logo=vite&logoColor=white" />
     <img src="https://img.shields.io/badge/-TypeScript-blue?logo=typescript&logoColor=white" />
@@ -14,11 +14,11 @@
     <img src="https://img.shields.io/badge/-Less-1D365D?logo=less&logoColor=white" alt="Less">
     <img src="https://img.shields.io/badge/-Tailwind%20CSS-06B6D4?logo=Tailwind%20CSS&logoColor=white" alt="Taiwind">
     <img src="" alt="">
-</p>
+<p>
 
-一个开箱即用，快速搭建大型应用的 Vue3 + Vite2 + TypeScript+...模板框架。集成了各类插件，并进行了模块化和按需加载的优化，可以放心使用。 [更新文档](https://github.com/tobe-fe-dalao/fast-vue3/blob/main/docs/update.md) | [在线运行](https://stackblitz.com/github/tobe-fe-dalao/fast-vue3?terminal=dev)
+一个开箱即用，快速搭建大型应用的 Vue3+Vite2+TypeScript+...模板框架。集成了各类插件，并进行了模块化和按需加载的优化，可以放心使用。 [更新文档](https://github.com/tobe-fe-dalao/fast-vue3/blob/main/docs/update.md) |  [在线运行](https://stackblitz.com/github/tobe-fe-dalao/fast-vue3?terminal=dev)
 
-简体中文 | [English](./README-en.md) | [日本語](./README.ja-JP.md)
+ 简体中文| [English](./README.en.md)  | [日本語](./README.ja-JP.md)
 
 # 功能亮点
 
@@ -59,7 +59,7 @@
 │    ├── App.vue         // vue模板入口
 │    ├── main.ts         // vue模板js
 ├── .d.ts                // 类型定义
-├── tailwind.config.js   // tailwind全局配置
+├── windi.config.js   // tailwind全局配置
 ├── tsconfig.json        // ts配置
 └── vite.config.ts       // vite全局配置
 ```
@@ -69,7 +69,7 @@
 ```json
 {
     ...
-    "@vitejs/plugin-vue-jsx": "^1.3.10"
+    "@vitejs/plugin-vue-jsx": "^1.3.3"
     ...
 }
 ```
@@ -78,22 +78,26 @@
 
 ```typescript
 //模块化写法
-import Components from 'unplugin-vue-components/vite';
-import { ElementPlusResolver, VueUseComponentsResolver } from 'unplugin-vue-components/resolvers';
+import Components from 'unplugin-vue-components/vite'
 export const AutoRegistryComponents = () => {
   return Components({
-    // dirs: ['src/components'],
     extensions: ['vue', 'md'],
     deep: true,
-    dts: 'types/components.d.ts',
+    dts: 'src/components.d.ts',
     directoryAsNamespace: false,
     globalNamespaces: [],
     directives: true,
     include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
     exclude: [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/, /[\\/]\.nuxt[\\/]/],
-    resolvers: [ElementPlusResolver(), VueUseComponentsResolver()],
-  });
-};
+    resolvers: [
+      IconsResolver({
+        componentPrefix: '',
+      }),
+      ArcoResolver({ importStyle: 'less' }), //根据你需要增加UI框架
+      VueUseComponentsResolver(), //默认使用VueUse组件
+    ],
+  })
+}
 ```
 
 ## 🧩Vite 插件模块化
@@ -106,18 +110,18 @@ export const AutoRegistryComponents = () => {
  * @name createVitePlugins
  * @description 封装plugins数组统一调用
  */
-import type { Plugin } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import vueJsx from '@vitejs/plugin-vue-jsx';
-import { ConfigSvgIconsPlugin } from './svgIcons';
-import { AutoRegistryComponents } from './component';
-import { AutoImportDeps } from './autoImport';
-import { ConfigMockPlugin } from './mock';
-import { ConfigVisualizerConfig } from './visualizer';
-import { ConfigCompressPlugin } from './compress';
-import { ConfigPagesPlugin } from './pages';
-import { ConfigMarkDownPlugin } from './markdown';
-import { ConfigRestartPlugin } from './restart';
+import type { Plugin } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+import { ConfigSvgIconsPlugin } from './svgIcons'
+import { AutoRegistryComponents } from './component'
+import { AutoImportDeps } from './autoImport'
+import { ConfigMockPlugin } from './mock'
+import { ConfigVisualizerConfig } from './visualizer'
+import { ConfigCompressPlugin } from './compress'
+import { ConfigPagesPlugin } from './pages'
+import { ConfigMarkDownPlugin } from './markdown'
+import { ConfigRestartPlugin } from './restart'
 
 export function createVitePlugins(isBuild: boolean) {
   const vitePlugins: (Plugin | Plugin[])[] = [
@@ -137,14 +141,14 @@ export function createVitePlugins(isBuild: boolean) {
     ConfigMarkDownPlugin(),
     // 监听配置文件改动重启
     ConfigRestartPlugin(),
-  ];
+  ]
   // vite-plugin-svg-icons
-  vitePlugins.push(ConfigSvgIconsPlugin(isBuild));
+  vitePlugins.push(ConfigSvgIconsPlugin(isBuild))
   // vite-plugin-mock
-  vitePlugins.push(ConfigMockPlugin(isBuild));
+  vitePlugins.push(ConfigMockPlugin(isBuild))
   // rollup-plugin-visualizer
-  vitePlugins.push(ConfigVisualizerConfig());
-  return vitePlugins;
+  vitePlugins.push(ConfigVisualizerConfig())
+  return vitePlugins
 }
 ```
 
@@ -155,22 +159,13 @@ import { createVitePlugins } from './config/vite/plugins'
 ...
 return {
     resolve: {
-      alias: [
-        {
-          find: 'vue-i18n',
-          replacement: 'vue-i18n/dist/vue-i18n.cjs.js',
-        },
-        // /@/xxxx => src/xxxx
-        {
-          find: /\/@\//,
-          replacement: pathResolve('src') + '/',
-        },
-        // /#/xxxx => types/xxxx
-        {
-          find: /\/#\//,
-          replacement: pathResolve('types') + '/',
-        },
-      ],
+      alias: {
+        "@": path.resolve(__dirname, './src'),
+        '@config': path.resolve(__dirname, './config'),
+        "@components": path.resolve(__dirname, './src/components'),
+        '@utils': path.resolve(__dirname, './src/utils'),
+        '@api': path.resolve(__dirname, './src/api'),
+      }
     },
     // plugins
     plugins: createVitePlugins(isBuild)
@@ -184,19 +179,19 @@ return {
 
 ```typescript
 // 支持模块化，配合plop可以通过命令行一键生成
-import { createPinia } from 'pinia';
-import { useAppStore } from './modules/app';
-import { useUserStore } from './modules/user';
-const pinia = createPinia();
-export { useAppStore, useUserStore };
-export default pinia;
+import { createPinia } from 'pinia'
+import { useAppStore } from './modules/app'
+import { useUserStore } from './modules/user'
+const pinia = createPinia()
+export { useAppStore, useUserStore }
+export default pinia
 ```
 
 创建文件`src/store/modules/user/index.ts`
 
 ```typescript
-import { defineStore } from 'pinia';
-import piniaStore from '@/store';
+import { defineStore } from 'pinia'
+import piniaStore from '@/store'
 export const useUserStore = defineStore(
   // 唯一ID
   'user',
@@ -205,7 +200,7 @@ export const useUserStore = defineStore(
     getters: {},
     actions: {},
   },
-);
+)
 ```
 
 ## 🤖 支持`Plop`自动生成文件
@@ -220,12 +215,12 @@ pnpm add plop
 根目录创建`plopfile.ts`
 
 ```typescript
-import { NodePlopAPI } from 'plop';
+import { NodePlopAPI } from 'plop'
 export default function (plop: NodePlopAPI) {
-  plop.setWelcomeMessage('请选择需要创建的模式：');
-  plop.setGenerator('page', require('./plop-tpls/page/prompt'));
-  plop.setGenerator('component', require('./plop-tpls/component/prompt'));
-  plop.setGenerator('store', require('./plop-tpls/store/prompt'));
+  plop.setWelcomeMessage('请选择需要创建的模式：')
+  plop.setGenerator('page', require('./plop-tpls/page/prompt'))
+  plop.setGenerator('component', require('./plop-tpls/component/prompt'))
+  plop.setGenerator('store', require('./plop-tpls/store/prompt'))
 }
 ```
 
@@ -290,14 +285,14 @@ plugins:[
       type: String,
       default: 'default',
     },
-  });
-  const symbolId = computed(() => `#${props.prefix}-${props.name}`);
+  })
+  const symbolId = computed(() => `#${props.prefix}-${props.name}`)
   const calsses = computed(() => {
     return {
       [`sdms-size-${props.size}`]: props.size,
-    };
-  });
-  const fontSize = reactive({ default: '32px', small: '20px', large: '48px' });
+    }
+  })
+  const fontSize = reactive({ default: '32px', small: '20px', large: '48px' })
 </script>
 ```
 
@@ -307,25 +302,25 @@ plugins:[
 
 ```typescript
 //封装src/api/user/index.ts
-import request from '@utils/http/axios';
-import { IResponse } from '@utils/http/axios/type';
-import { ReqAuth, ReqParams, ResResult } from './type';
+import request from '@utils/http/axios'
+import { IResponse } from '@utils/http/axios/type'
+import { ReqAuth, ReqParams, ResResult } from './type'
 enum URL {
   login = '/v1/user/login',
   permission = '/v1/user/permission',
   userProfile = 'mock/api/userProfile',
 }
-const getUserProfile = async () => request<ReqAuth>({ url: URL.userProfile });
-const login = async (data: ReqParams) => request({ url: URL.login, data });
-const permission = async () => request<ReqAuth>({ url: URL.permission });
-export default { getUserProfile, login, permission };
+const getUserProfile = async () => request<ReqAuth>({ url: URL.userProfile })
+const login = async (data: ReqParams) => request({ url: URL.login, data })
+const permission = async () => request<ReqAuth>({ url: URL.permission })
+export default { getUserProfile, login, permission }
 ```
 
 ```typescript
 //调用
-import userApi from '@api/user';
+import userApi from '@api/user'
 // setup模式下组件可以直接引用
-const res = await userApi.profile();
+const res = await userApi.profile()
 ```
 
 ## 👽 自动生成`router`，过滤`components`组件
@@ -333,17 +328,17 @@ const res = await userApi.profile();
 支持`vue-router4.0`的模块化，通过检索 pages 文件夹可自动生成路由，并支持动态路由
 
 ```typescript
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-import routes from 'virtual:generated-pages';
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import routes from 'virtual:generated-pages'
 
-console.log(routes, '打印生成自动生成的路由');
+console.log(routes, '打印生成自动生成的路由')
 //导入生成的路由数据
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-});
+})
 
-export default router;
+export default router
 ```
 
 ## 🧬 支持 Mock 数据
@@ -362,25 +357,25 @@ viteMockServe({
        import { setupProdMockServer } from '../mock/_createProdMockServer';
        setupProdMockServer();
        `,
-});
+})
 ```
 
 根目录下创建 `_createProductionServer.ts`文件,非`_`开头文件会被自动加载成 mock 文件
 
 ```typescript
-import { createProdMockServer } from 'vite-plugin-mock/es/createProdMockServer';
+import { createProdMockServer } from 'vite-plugin-mock/es/createProdMockServer'
 // 批量加载
-const modules = import.meta.globEager('./mock/*.ts');
+const modules = import.meta.globEager('./mock/*.ts')
 
-const mockModules: Array<string> = [];
+const mockModules: Array<string> = []
 Object.keys(modules).forEach((key) => {
   if (key.includes('/_')) {
-    return;
+    return
   }
-  mockModules.push(...modules[key].default);
-});
+  mockModules.push(...modules[key].default)
+})
 export function setupProdMockServer() {
-  createProdMockServer(mockModules);
+  createProdMockServer(mockModules)
 }
 ```
 
@@ -411,9 +406,9 @@ import {
   API_TARGET_URL,
   MOCK_API_BASE_URL,
   MOCK_API_TARGET_URL,
-} from '@config/constant';
-import { ProxyOptions } from 'vite';
-type ProxyTargetList = Record<string, ProxyOptions>;
+} from '@config/constant'
+import { ProxyOptions } from 'vite'
+type ProxyTargetList = Record<string, ProxyOptions>
 
 const init: ProxyTargetList = {
   // test
@@ -428,9 +423,9 @@ const init: ProxyTargetList = {
     changeOrigin: true,
     rewrite: (path) => path.replace(new RegExp(`^${MOCK_API_BASE_URL}`), '/api'),
   },
-};
+}
 
-export default init;
+export default init
 ```
 
 ## 🎉 其他
@@ -456,8 +451,14 @@ pnpm install
 pnpm run dev
 ```
 
-如果不报错，恭喜你点火成功。否则，请提报你的问题到[Issues](https://github.com/tobe-fe-dalao/fast-vue3/issues)。
+如果不报错，恭喜你点火成功。否则，请看下面常见问题。
 
+如果你已经了解本模板，建议你拉取  `template`  分支进行项目开发，该分支不含任何示例代码。
+
+```
+# clone  template 分支
+git clone -b template https://github.com/tobe-fe-dalao/fast-vue3.git
+```
 
 # 工具库
 
@@ -498,8 +499,9 @@ pnpm run dev
 # 资料
 
 - 官方配置文档入口[vite](https://vitejs.cn/config/)、[pinia](https://pinia.vuejs.org/introduction.html)、[vue-router4](https://next.router.vuejs.org/zh/introduction.html)、[plop](https://github.com/plopjs/plop)...
-- 更信息的配置地址：https://juejin.cn/post/7055878408365932557
-- vu3 写组件实践案例:https://juejin.cn/post/7052717075168493598
+- 更详细的配置手册:https://juejin.cn/post/7036745610954801166
+- vu3 写组件实践案例:https://juejin.cn/post/7052717075168493598  
+
 
 # 贡献者
 
@@ -510,11 +512,6 @@ pnpm run dev
 <a href="https://github.com/study-vue3/fast-vue3/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=study-vue3/fast-vue3" />
 </a>
-
-# Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=tobe-fe-dalao/fast-vue3&type=Timeline)](https://star-history.com/#tobe-fe-dalao/fast-vue3&Timeline)
-
 
 # 最后
 

@@ -1,0 +1,23 @@
+{
+  "id": "3422916",
+  "name": "gmrepo",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1842112",
+      "name": "link",
+      "font_class": "link",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "10506920",
+      "name": "link",
+      "font_class": "share",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    }
+  ]
+}

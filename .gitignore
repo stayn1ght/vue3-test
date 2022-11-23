@@ -9,7 +9,7 @@ dist-ssr
 .env.local
 .env.*.local
 .eslintcache
-
+.vscode
 
 # Log files
 npm-debug.log*
@@ -17,6 +17,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 pnpm-lock.yaml*
+yarn.lock
+package-lock.json
 
 # Editor directories and files
 .idea
@@ -26,5 +28,4 @@ pnpm-lock.yaml*
 *.njsproj
 *.sln
 *.sw?
-./packages
-./history
+packages

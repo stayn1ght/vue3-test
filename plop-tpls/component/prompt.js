@@ -1,16 +1,16 @@
-const fs = require('fs');
+const fs = require('fs')
 
 function getFolder(path) {
-  let components = [];
-  const files = fs.readdirSync(path);
+  let components = []
+  const files = fs.readdirSync(path)
   files.forEach(function (item) {
-    let stat = fs.lstatSync(path + '/' + item);
+    let stat = fs.lstatSync(path + '/' + item)
     if (stat.isDirectory() === true && item != 'components') {
-      components.push(path + '/' + item);
-      components.push.apply(components, getFolder(path + '/' + item));
+      components.push(path + '/' + item)
+      components.push.apply(components, getFolder(path + '/' + item))
     }
-  });
-  return components;
+  })
+  return components
 }
 
 module.exports = {
@@ -26,9 +26,9 @@ module.exports = {
       type: 'list',
       name: 'path',
       message: '请选择组件创建目录',
-      choices: getFolder('src/views'),
+      choices: getFolder('src/pages'),
       when: (answers) => {
-        return !answers.isGlobal;
+        return !answers.isGlobal
       },
     },
     {
@@ -37,19 +37,19 @@ module.exports = {
       message: '请输入组件名称',
       validate: (v) => {
         if (!v || v.trim === '') {
-          return '组件名称不能为空';
+          return '组件名称不能为空'
         } else {
-          return true;
+          return true
         }
       },
     },
   ],
   actions: (data) => {
-    let path = '';
+    let path = ''
     if (data.isGlobal) {
-      path = 'src/components/{{properCase name}}/index.vue';
+      path = 'src/components/{{properCase name}}/index.vue'
     } else {
-      path = `${data.path}/components/{{properCase name}}/index.vue`;
+      path = `${data.path}/components/{{properCase name}}/index.vue`
     }
     const actions = [
       {
@@ -57,7 +57,7 @@ module.exports = {
         path: path,
         templateFile: 'plop-tpls/component/index.hbs',
       },
-    ];
-    return actions;
+    ]
+    return actions
   },
-};
+}

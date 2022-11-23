@@ -1,25 +1,28 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import routes from 'virtual:generated-pages';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
+// @ts-ignore
+import { createRouter, createWebHashHistory } from 'vue-router'
+import generatedRoutes from 'virtual:generated-pages'
+// @ts-ignore
+import { setupLayouts } from 'virtual:generated-layouts'
 
-routes.push({
-  path: '/',
-  redirect: '/network',
-});
-//导入生成的路由数据
+generatedRoutes.push(
+  ...[
+    {
+      path: '/species/markerspecies',
+      redirect: '/taxon/marker'
+    },
+    {
+      path: '/:catchAll(.*)',
+      redirect: '/home'
+    }
+  ]
+)
+
+const routes = setupLayouts(generatedRoutes)
+
+// 可以看出路由作为参数传递到了layout组件中
 const router = createRouter({
-  history: createWebHashHistory(),
-  routes,
-});
+  history: createWebHashHistory(), // 使用hash模式
+  routes // 路由规则
+})
 
-router.beforeEach(async (_to, _from, next) => {
-  NProgress.start();
-  next();
-});
-
-router.afterEach((_to) => {
-  NProgress.done();
-});
-
-export default router;
+export default router
