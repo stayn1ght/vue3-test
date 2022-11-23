@@ -10,10 +10,15 @@ export const APP_TITLE = 'Fast-Vue3'
 export const VITE_PORT = 3001
 
 // prefix
-export const API_PREFIX = '/api'
+// 这个前缀似乎完全没有用到
+// 可能后端要用到？
+export const API_PREFIX = '/atguigu'
 
 // serve
+// 向后端请求的地址没有去除前缀/api
+// 应该是根据接口文档约定，后端的接口地址都是以/api开头的
 export const API_BASE_URL = '/api'
+// export const API_BASE_URL = '/atguigu'
 export const API_TARGET_URL = 'https://gmrepo.humangut.info'
 
 // mock

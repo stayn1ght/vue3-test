@@ -12,7 +12,9 @@ axios.defaults.withCredentials = false
 axios.defaults.headers.post['Access-Control-Allow-Origin-Type'] = '*'
 
 const axiosInstance: AxiosInstance = axios.create({
+  // 这里规定了向后端请求的基础路径
   baseURL: '/api'
+  // baseURL: '/atguigu'
   // transformRequest: [
   //   function (data) {
   //     //由于使用的 form-data传数据所以要格式化

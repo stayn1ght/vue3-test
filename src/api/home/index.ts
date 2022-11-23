@@ -15,8 +15,6 @@ enum URL {
 export const searchPage = (keywords: string) => get({ url: URL.search + keywords })
 
 export const getHomeStates = () => post({ url: URL.states })
-// export const getHomeStates = () => post({ url: '/getDatabaseStatsForIndexController' })
-console.log('@@',getHomeStates())
 
 interface SearchParams {
   sql: string
